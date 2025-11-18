@@ -9,9 +9,9 @@ from typing import List, Dict, Optional
 import logging
 from pathlib import Path
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import PromptTemplate
-from pydantic import BaseModel, Field, field_validator
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from pydantic import BaseModel, Field, validator
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -30,30 +30,18 @@ class DigitalInitiative(BaseModel):
     YearMentioned: str = Field(description="Year the initiative was mentioned or implemented")
     ExpectedImpact: Optional[str] = Field(description="Expected or actual impact/outcome", default="")
     DigitalInvestment: Optional[str] = Field(description="Investment amount or budget allocated", default="")
-    
-    @field_validator('Category')
-    @classmethod
+
+    @validator('Category')
     def validate_category(cls, v):
-        valid_categories = [
-            'Digital Infrastructure',
-            'AI & Automation',
-            'Cybersecurity',
-            'Customer Experience',
-            'ESG Tech'
+        allowed_categories = [
+            "Digital Infrastructure",
+            "AI & Automation",
+            "Cybersecurity",
+            "Customer Experience",
+            "ESG Tech"
         ]
-        if v and v not in valid_categories:
-            # Try to map to closest category
-            v_lower = v.lower()
-            if any(term in v_lower for term in ['infrastructure', 'erp', 'cloud', 'it upgrade']):
-                return 'Digital Infrastructure'
-            elif any(term in v_lower for term in ['ai', 'automation', 'analytics', 'rpa', 'blockchain']):
-                return 'AI & Automation'
-            elif any(term in v_lower for term in ['security', 'cyber', 'protection', 'compliance']):
-                return 'Cybersecurity'
-            elif any(term in v_lower for term in ['customer', 'ecommerce', 'mobile', 'chatbot']):
-                return 'Customer Experience'
-            elif any(term in v_lower for term in ['esg', 'sustainability', 'green', 'environment']):
-                return 'ESG Tech'
+        if v not in allowed_categories:
+            raise ValueError(f'Category must be one of: {allowed_categories}')
         return v
 
 
@@ -73,10 +61,10 @@ class DigitalTransformationExtractor:
             raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable.")
         
         self.model = model
-        self.llm = ChatOpenAI(
-            model=self.model,
-            temperature=0,
-            api_key=self.api_key
+        self.llm = OpenAI(
+            model_name="gpt-3.5-turbo",
+            temperature=0.1,
+            openai_api_key=api_key
         )
         
         # Create the prompt template
@@ -157,8 +145,7 @@ Return ONLY a valid JSON array, no additional text or explanation:"""
             )
             
             # Call the LLM
-            response = self.llm.invoke(prompt)
-            response_text = response.content.strip()
+            response_text = self.llm.predict(prompt)
             
             # Parse JSON response
             # Remove markdown code blocks if present
