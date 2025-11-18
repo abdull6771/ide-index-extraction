@@ -23,15 +23,43 @@ fi
 echo "✓ Connected as user: $USER"
 echo ""
 
+# Detect package manager
+if command -v yum &> /dev/null; then
+    PACKAGE_MANAGER="yum"
+    UPDATE_CMD="sudo yum update -y"
+    INSTALL_CMD="sudo yum install -y"
+    # Install EPEL for RHEL/CentOS
+    echo "📦 Installing EPEL repository..."
+    sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+elif command -v apt &> /dev/null; then
+    PACKAGE_MANAGER="apt"
+    UPDATE_CMD="sudo apt update && sudo apt upgrade -y"
+    INSTALL_CMD="sudo apt install -y"
+elif command -v dnf &> /dev/null; then
+    PACKAGE_MANAGER="dnf"
+    UPDATE_CMD="sudo dnf update -y"
+    INSTALL_CMD="sudo dnf install -y"
+else
+    echo "❌ No supported package manager found (yum, apt, dnf)"
+    exit 1
+fi
+
+echo "✓ Detected package manager: $PACKAGE_MANAGER"
+echo ""
+
 # Update system
 echo "📦 Updating system packages..."
-sudo apt update && sudo apt upgrade -y
+$UPDATE_CMD
 echo "✓ System updated"
 echo ""
 
 # Install required packages
 echo "🔧 Installing required packages..."
-sudo apt install -y git python3 python3-pip python3-venv htop tmux curl unzip
+if [ "$PACKAGE_MANAGER" = "yum" ]; then
+    $INSTALL_CMD git python3 python3-pip python3-virtualenv htop tmux curl unzip
+else
+    $INSTALL_CMD git python3 python3-pip python3-venv htop tmux curl unzip
+fi
 echo "✓ Packages installed"
 echo ""
 

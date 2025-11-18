@@ -28,11 +28,18 @@ df -h
 ### Step 3: Update System
 
 ```bash
-# Update packages
-sudo apt update && sudo apt upgrade -y
+# For RHEL/CentOS/Amazon Linux systems:
+sudo yum update -y
+
+# Install EPEL repository for additional packages
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
 # Install essential tools
-sudo apt install -y git python3 python3-pip python3-venv htop tmux
+sudo yum install -y git python3 python3-pip python3-virtualenv htop tmux
+
+# For Ubuntu/Debian systems (if different):
+# sudo apt update && sudo apt upgrade -y
+# sudo apt install -y git python3 python3-pip python3-venv htop tmux
 ```
 
 ---
@@ -294,8 +301,15 @@ sudo systemctl restart sshd
 
 ```bash
 ssh haitham@136.112.60.210
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y git python3 python3-pip python3-venv htop tmux
+
+# For RHEL/CentOS/Amazon Linux:
+sudo yum update -y
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo yum install -y git python3 python3-pip python3-virtualenv htop tmux
+
+# For Ubuntu/Debian (if different):
+# sudo apt update && sudo apt upgrade -y
+# sudo apt install -y git python3 python3-pip python3-venv htop tmux
 ```
 
 ### 2. Project Setup
