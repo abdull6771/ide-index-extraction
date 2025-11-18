@@ -9,9 +9,9 @@ from typing import List, Dict, Optional
 import logging
 from pathlib import Path
 
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from pydantic import BaseModel, Field, validator
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from pydantic import BaseModel, Field, field_validator
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,7 +31,8 @@ class DigitalInitiative(BaseModel):
     ExpectedImpact: Optional[str] = Field(description="Expected or actual impact/outcome", default="")
     DigitalInvestment: Optional[str] = Field(description="Investment amount or budget allocated", default="")
 
-    @validator('Category')
+    @field_validator('Category')
+    @classmethod
     def validate_category(cls, v):
         allowed_categories = [
             "Digital Infrastructure",
@@ -61,8 +62,8 @@ class DigitalTransformationExtractor:
             raise ValueError("OpenAI API key not provided. Set OPENAI_API_KEY environment variable.")
         
         self.model = model
-        self.llm = OpenAI(
-            model_name="gpt-3.5-turbo",
+        self.llm = ChatOpenAI(
+            model="gpt-3.5-turbo",
             temperature=0.1,
             openai_api_key=api_key
         )
@@ -145,7 +146,8 @@ Return ONLY a valid JSON array, no additional text or explanation:"""
             )
             
             # Call the LLM
-            response_text = self.llm.predict(prompt)
+            response = self.llm.invoke(prompt)
+            response_text = response.content.strip()
             
             # Parse JSON response
             # Remove markdown code blocks if present
