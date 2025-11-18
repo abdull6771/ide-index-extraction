@@ -1,0 +1,26 @@
+# Islamic Digital Economy (IDE) Index - Digital Transformation Extraction System
+
+# Required Python packages
+pypdf2>=3.0.0
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-core>=0.3.0
+pydantic>=2.0.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Optional: For advanced PDF handling
+pdfplumber>=0.10.0
+
+# Optional: For vector storage (Pinecone integration)
+pinecone-client>=3.0.0
+langchain-pinecone>=0.0.1
+
+# Optional: For data analysis and visualization
+pandas>=2.0.0
+plotly>=5.0.0
+streamlit>=1.30.0
+
+# Development tools
+pytest>=7.0.0
+black>=23.0.0

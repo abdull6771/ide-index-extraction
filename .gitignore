@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Output files (optional - you may want to keep these)
+# outputs/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+temp/
+tmp/
+
+# Large files - PDFs contain company data
+*.pdf
+
+# Data folder (contains PDF reports)
+data/
+
+# Database files
+database/*.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
+
+# Database - Contains extracted data
+database/*.db
+database/*.db-*
+
+# Output files - Generated results (uncomment to keep in git)
+outputs/*.json
+outputs/*.csv
+outputs/*.xlsx
+
+# If you want to track PDFs or outputs in git, comment out the relevant lines above
